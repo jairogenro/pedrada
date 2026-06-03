@@ -2666,22 +2666,12 @@ p {
 }
 
 .app-content .section-subtitle {
-  margin: 0;
-  max-width: none;
-}
-
-@media (min-width: 993px) {
-  .app-content .section-title {
-    text-align: left;
-  }
-  .app-content .section-subtitle {
-    text-align: left;
-  }
+  margin: 0 auto;
 }
 
 .app-store-buttons {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   gap: 16px;
   margin: 0;
