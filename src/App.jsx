@@ -864,7 +864,7 @@ export default function App() {
             <div className="hero-content-centered">
               <h1 className="hero-title-centered">
                 Aprenda a rir da sua própria <span className="accent-text">autossabotagem</span>
-                <br className="hero-br" /> — e finalmente sair da inércia.
+                <br className="hero-br" /> — e sair da inércia.
               </h1>
               
               <p className="hero-subtitle-centered">
