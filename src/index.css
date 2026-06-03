@@ -2548,7 +2548,7 @@ p {
 /* ── FAQ ACCORDION SECTION ───────────────────────────────── */
 .faq-section {
   padding: 100px 0;
-  background: var(--bg-secondary);
+  background: var(--bg-app);
   border-top: 2px solid var(--cream-border);
   border-bottom: 2px solid var(--cream-border);
   position: relative;
