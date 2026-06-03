@@ -1042,7 +1042,7 @@ p {
    SECTION 5 — PRODUCT DETAILS / KIT
 ══════════════════════════════════════════════════════════════ */
 .details-section {
-  padding: 100px 0;
+  padding: 100px 0 180px;
   background: var(--bg-app);
   position: relative;
   z-index: 10;
@@ -1347,25 +1347,35 @@ p {
 
 .peeking-bubble {
   max-width: 220px;
-  background: var(--text-main);
-  border: 2px solid var(--cream-border);
+  background: rgba(30, 27, 20, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 20px;
   padding: 14px 18px;
-  box-shadow: 0 12px 36px rgba(50, 40, 30, 0.22);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
   position: relative;
   font-size: 0.85rem;
   font-weight: 800;
-  color: #FFFBF7;
+  color: #FFFBF7 !important;
   margin-bottom: 10px;
   line-height: 1.45;
   transition: transform 0.25s var(--ease-elastic), border-color 0.2s ease;
   animation: bubble-pop-shake 0.5s var(--ease-elastic) both;
 }
 
+.peeking-bubble p {
+  color: #FFFBF7 !important;
+  margin: 4px 0 0 0 !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+}
+
 .peeking-bubble-label {
   font-size: 0.72rem;
   text-transform: uppercase;
-  color: var(--orange);
+  color: #FF8F70 !important;
   margin-bottom: 4px;
   letter-spacing: 0.06em;
   font-weight: 900;
@@ -1373,7 +1383,7 @@ p {
 
 .peeking-bubble-cta {
   font-size: 0.72rem;
-  color: var(--orange-light);
+  color: #FFC0B0 !important;
   margin-top: 6px;
   font-weight: 800;
   text-decoration: underline;
@@ -1386,9 +1396,9 @@ p {
   right: -9px; top: 50%;
   transform: translateY(-50%) rotate(45deg);
   width: 14px; height: 14px;
-  background: var(--text-main);
-  border-right: 2px solid var(--cream-border);
-  border-top: 2px solid var(--cream-border);
+  background: rgba(30, 27, 20, 0.88) !important;
+  border-right: 2px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.16) !important;
 }
 
 .peeking-mascot-wrap {
@@ -1745,22 +1755,13 @@ p {
   gap: 28px;
   background: var(--bg-card);
   border: 2px solid var(--cream-border);
+  border-top: 5px solid var(--orange);
   border-bottom: 7px solid var(--cream-shadow);
   border-radius: var(--radius-card);
   padding: 32px 36px;
   box-shadow: 0 8px 32px rgba(78,70,62,0.07);
   position: relative;
   overflow: visible;
-}
-
-/* Top accent line */
-.tcard::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--orange), var(--orange-mid));
-  border-radius: var(--radius-card) var(--radius-card) 0 0;
 }
 
 .tcard-active {
@@ -1775,11 +1776,8 @@ p {
 /* RAGE CARD — o Marcelo F. está no limite */
 .tcard-rage {
   border-color: rgba(192, 57, 43, 0.5) !important;
+  border-top: 5px solid #C0392B !important;
   background: linear-gradient(160deg, #fff8f7 0%, #fff0ee 100%) !important;
-}
-
-.tcard-rage::before {
-  background: linear-gradient(90deg, #C0392B, #E74C3C) !important;
 }
 
 .tcard-rage .tcard-avatar {
@@ -2112,4 +2110,170 @@ p {
   50% { transform: scale(1.1) rotate(4deg); }
   75% { transform: scale(0.95) rotate(-2deg); }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ── VIEWPORT SHOWER STONES PARTICLES ────────────────────── */
+.viewport-shower-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.shower-stone {
+  position: absolute;
+  top: -120px;
+  animation-name: fast-fall-and-drift;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation-fill-mode: forwards;
+}
+
+.shower-stone svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes fast-fall-and-drift {
+  0% {
+    top: -120px;
+    transform: rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: 105vh;
+    transform: rotate(720deg) translateX(90px);
+    opacity: 0;
+  }
+}
+
+/* ── ACCUMULATED STONES PILE (DETAILS SECTION FOOTER) ───── */
+.accumulated-stones-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+  border-bottom: 6px solid var(--cream-border);
+}
+
+.accumulated-stone {
+  position: absolute;
+  bottom: 0;
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: bottom center;
+  animation: pop-in 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.accumulated-stone svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0) rotate(var(--rot, 0deg));
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(var(--rot, 0deg));
+    opacity: 1;
+  }
+}
+
+/* ── FAQ ACCORDION SECTION ───────────────────────────────── */
+.faq-section {
+  padding: 100px 0;
+  background: var(--bg-secondary);
+  border-top: 2px solid var(--cream-border);
+  border-bottom: 2px solid var(--cream-border);
+  position: relative;
+  z-index: 10;
+}
+
+.faq-accordion {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border: 2px solid var(--cream-border);
+  border-bottom: 5px solid var(--cream-shadow);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  transition: all 0.2s var(--ease-elastic);
+}
+
+.faq-item:hover {
+  transform: translateY(-2px);
+  border-bottom-width: 7px;
+}
+
+.faq-item-open {
+  border-color: var(--orange);
+  border-bottom: 5px solid var(--orange-shadow);
+  transform: none !important;
+}
+
+.faq-question-btn {
+  width: 100%;
+  padding: 22px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  gap: 16px;
+}
+
+.faq-item-open .faq-question-btn {
+  color: var(--orange);
+}
+
+.faq-icon {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-light);
+  transition: transform 0.2s ease;
+}
+
+.faq-item-open .faq-icon {
+  color: var(--orange);
+}
+
+.faq-answer-wrapper {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-answer-content {
+  padding: 0 28px 24px 28px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.faq-answer-content strong {
+  color: var(--text-main);
 }

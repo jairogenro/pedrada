@@ -88,12 +88,12 @@ const testimonials = [
 // --- DECORATIVE FLOATING STONES BACKGROUND COMPONENT ---
 function FloatingStones({ count = 6 }) {
   const stones = [
-    { left: '8%', size: 32, delay: '-2s', duration: '26s', type: 0 },
-    { left: '26%', size: 22, delay: '-7s', duration: '31s', type: 1 },
-    { left: '43%', size: 40, delay: '-14s', duration: '23s', type: 2 },
-    { left: '60%', size: 28, delay: '-10s', duration: '29s', type: 0 },
-    { left: '76%', size: 20, delay: '-4s', duration: '33s', type: 1 },
-    { left: '90%', size: 36, delay: '-18s', duration: '25s', type: 2 }
+    { left: '6%', size: 75, delay: '-2s', duration: '14s', type: 0 },
+    { left: '24%', size: 52, delay: '-5s', duration: '18s', type: 1 },
+    { left: '42%', size: 90, delay: '-10s', duration: '12s', type: 2 },
+    { left: '58%', size: 62, delay: '-7s', duration: '16s', type: 0 },
+    { left: '74%', size: 45, delay: '-3s', duration: '19s', type: 1 },
+    { left: '88%', size: 82, delay: '-12s', duration: '15s', type: 2 }
   ].slice(0, count);
 
   return (
@@ -112,19 +112,20 @@ function FloatingStones({ count = 6 }) {
         >
           {stone.type === 0 && (
             <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 15,35 C 10,25 25,10 40,15 C 50,20 48,35 40,40 C 30,45 20,45 15,35 Z" fill="rgba(141, 134, 117, 0.06)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M 22,20 Q 30,17 38,22" stroke="rgba(74, 69, 58, 0.06)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+              <path d="M 12,25 C 10,12 28,12 48,15 C 52,22 50,38 38,42 C 22,45 14,35 12,25 Z" fill="rgba(147, 140, 128, 0.25)" stroke="rgba(58, 52, 43, 0.35)" strokeWidth="3" strokeLinejoin="round" />
+              <path d="M 18,22 Q 22,18 32,20" stroke="rgba(58, 52, 43, 0.25)" strokeWidth="2" strokeLinecap="round" fill="none" />
             </svg>
           )}
           {stone.type === 1 && (
-            <svg viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 10,25 C 8,15 22,8 35,12 C 42,15 42,28 35,32 C 28,35 12,32 10,25 Z" fill="rgba(165, 158, 144, 0.05)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
+            <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 10,22 C 8,14 26,6 46,12 C 54,20 48,38 34,42 C 20,44 12,32 10,22 Z" fill="rgba(138, 131, 120, 0.22)" stroke="rgba(58, 52, 43, 0.35)" strokeWidth="3" strokeLinejoin="round" />
+              <path d="M 22,25 Q 34,22 42,28" stroke="rgba(58, 52, 43, 0.25)" strokeWidth="2" strokeLinecap="round" fill="none" />
             </svg>
           )}
           {stone.type === 2 && (
-            <svg viewBox="0 0 55 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 12,28 C 10,15 28,10 42,18 C 48,22 45,35 38,38 C 28,42 15,38 12,28 Z" fill="rgba(157, 150, 136, 0.06)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M 22,22 L 28,28 M 28,22 L 22,28" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="1.5" strokeLinecap="round" />
+            <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 15,28 C 12,15 28,10 45,18 C 50,22 46,38 35,40 C 22,42 16,36 15,28 Z" fill="rgba(156, 149, 137, 0.25)" stroke="rgba(58, 52, 43, 0.35)" strokeWidth="3" strokeLinejoin="round" />
+              <path d="M 24,20 L 30,26 M 30,20 L 24,26" stroke="rgba(58, 52, 43, 0.28)" strokeWidth="2" strokeLinecap="round" />
             </svg>
           )}
         </div>
@@ -132,6 +133,138 @@ function FloatingStones({ count = 6 }) {
     </div>
   );
 }
+
+// --- SHOWER STONE INDIVIDUAL ELEMENT (GSAP ANIMATED PARABOLA) ---
+function ShowerStone({ stone, onComplete }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    // Randomize trajectory direction and arc
+    const startFromLeft = Math.random() > 0.5;
+    const startX = startFromLeft ? -100 : window.innerWidth + 100;
+    const startY = window.innerHeight * (0.6 + Math.random() * 0.3); // Throw from bottom half
+
+    // horizontal distance it covers (half to full screen width)
+    const driftDist = window.innerWidth * (0.4 + Math.random() * 0.5);
+    const targetX = startFromLeft ? startX + driftDist : startX - driftDist;
+
+    // Peak height of parabola (reaches upper 10% to 40% of screen)
+    const peakY = window.innerHeight * (0.1 + Math.random() * 0.3);
+    const finalY = window.innerHeight + 120; // below screen
+
+    const duration = 1.0 + Math.random() * 0.7; // Fast physical throw (1.0s to 1.7s total)
+    const peakTime = duration * 0.35;
+    const fallTime = duration * 0.65;
+    
+    const rotation = (startFromLeft ? 1 : -1) * (360 + Math.random() * 540);
+
+    // Initial position
+    gsap.set(node, { x: startX, y: startY, rotation: 0, scale: 0.7 });
+
+    // Horizontal linear or slight ease out
+    gsap.to(node, {
+      x: targetX,
+      rotation: rotation,
+      scale: 1,
+      duration: duration,
+      ease: "power1.out"
+    });
+
+    // Vertical parabolic ease: up and down
+    gsap.to(node, {
+      y: peakY,
+      duration: peakTime,
+      ease: "power2.out",
+      onComplete: () => {
+        gsap.to(node, {
+          y: finalY,
+          duration: fallTime,
+          ease: "power2.in",
+          onComplete: () => {
+            onComplete(stone.id);
+          }
+        });
+      }
+    });
+  }, [stone.id, onComplete]);
+
+  return (
+    <div
+      ref={ref}
+      className="shower-stone"
+      style={{
+        position: 'fixed',
+        width: `${stone.size}px`,
+        height: `${stone.size}px`,
+        pointerEvents: 'none',
+        zIndex: 9999,
+        left: 0,
+        top: 0
+      }}
+    >
+      {stone.type === 0 && (
+        <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 12,25 C 10,12 28,12 48,15 C 52,22 50,38 38,42 C 22,45 14,35 12,25 Z" fill="#938C80" stroke="#3A342B" strokeWidth="3" strokeLinejoin="round" />
+          <path d="M 18,22 Q 22,18 32,20" stroke="#3A342B" strokeWidth="2" strokeLinecap="round" fill="none" />
+        </svg>
+      )}
+      {stone.type === 1 && (
+        <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 10,22 C 8,14 26,6 46,12 C 54,20 48,38 34,42 C 20,44 12,32 10,22 Z" fill="#8A8378" stroke="#3A342B" strokeWidth="3" strokeLinejoin="round" />
+          <path d="M 22,25 Q 34,22 42,28" stroke="#3A342B" strokeWidth="2" strokeLinecap="round" fill="none" />
+        </svg>
+      )}
+      {stone.type === 2 && (
+        <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 15,28 C 12,15 28,10 45,18 C 50,22 46,38 35,40 C 22,42 16,36 15,28 Z" fill="#9C9589" stroke="#3A342B" strokeWidth="3" strokeLinejoin="round" />
+          <path d="M 24,20 L 30,26 M 30,20 L 24,26" stroke="#3A342B" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
+// --- VIEWPORT SHOWER STONES CONTAINER ---
+function ViewportShowerStones({ stones, onRemove }) {
+  return (
+    <div className="viewport-shower-container" aria-hidden="true">
+      {stones.map(stone => (
+        <ShowerStone 
+          key={stone.id} 
+          stone={stone} 
+          onComplete={onRemove} 
+        />
+      ))}
+    </div>
+  );
+}
+
+// --- FAQ DATA ---
+const faqData = [
+  {
+    q: "Isso substitui terapia? Posso cancelar minha psicóloga?",
+    a: "<strong>De jeito nenhum.</strong> O PEDRADA é um chacoalhão tátil de humor ácido, não um tratamento clínico. Ele serve para você rir da própria inércia e encarar a realidade, mas para resolver seus traumas profundos você ainda vai precisar de ajuda profissional especializada. Use o baralho como faísca, a terapia como o caminho."
+  },
+  {
+    q: "Se eu me sentir muito ofendida por uma carta, posso processar vocês?",
+    a: "Poder, você pode tudo. Mas o nosso departamento jurídico é formado por pessoas que já tomaram três pedradas e estão sem paciência. Se a carapuça serviu e você se reconheceu na carta, a culpa é da sua rotina, não do papel. Respire fundo e comece a agir."
+  },
+  {
+    q: "Por que eu pagaria por isso se posso me autossabotar de graça?",
+    a: "Porque de graça você não tem o prazer físico de segurar o seu próprio fracasso impresso em papel premium 350g com acabamento texturizado. Além disso, colocar o totem da Pedrinha na sua mesa é um lembrete visual diário de que a autossabotagem tem preço."
+  },
+  {
+    q: "Qual o prazo de entrega? Vai demorar igual aos meus projetos pendentes?",
+    a: "Não, nós realmente entregamos. Assim que o lote de pré-venda for liberado, os envios serão feitos em até 5 dias úteis com código de rastreamento enviado por e-mail. Você poderá rastrear o pacote enquanto procrastina no feed do Instagram."
+  },
+  {
+    q: "Posso dar de presente para um amigo procrastinador ou para o meu ex?",
+    a: "Com certeza. É o presente ideal para aquele colega que está 'montando um plano de negócios' há 3 anos ou para a amiga que compra planner e só usa a folha de adesivos. Apenas entregue e saia corneros antes que leiam a primeira carta."
+  }
+];
 
 // --- MAIN APPLICATION ---
 export default function App() {
@@ -200,6 +333,36 @@ export default function App() {
   // History tracking to guarantee uniqueness
   const phraseHistoryRef = useRef([]);
   const reactionHistoryRef = useRef([]);
+
+  // FAQ state
+  const [expandedFaq, setExpandedFaq] = useState(null);
+
+  // Falling shower stones state
+  const [showerStones, setShowerStones] = useState([]);
+
+  // Accumulated stones stacked at the bottom of Kit section
+  const [accumulatedStones, setAccumulatedStones] = useState(12);
+
+  const triggerShower = () => {
+    const newStones = Array.from({ length: 12 }).map((_, i) => ({
+      id: Math.random() + '-' + i + '-' + Date.now(),
+      left: `${5 + Math.random() * 90}%`,
+      size: Math.floor(Math.random() * 40) + 40, // 40px to 80px
+      delay: Math.random() * 0.8,
+      duration: 1.2 + Math.random() * 1.5,
+      type: i % 3,
+    }));
+    setShowerStones(prev => [...prev, ...newStones]);
+  };
+
+  const handleRemoveShowerStone = (id) => {
+    setShowerStones(prev => prev.filter(s => s.id !== id));
+    setAccumulatedStones(prev => prev + 1);
+  };
+
+  const toggleFaq = (idx) => {
+    setExpandedFaq(prev => prev === idx ? null : idx);
+  };
 
 
 
@@ -343,6 +506,7 @@ export default function App() {
   const triggerThrowAndDraw = () => {
     if (isThrownAnimating) return;
     setIsThrownAnimating(true);
+    triggerShower();
 
     // Randomize throw target coordinates & rotation to make it feel organic and chaotic
     const isLeft = Math.random() > 0.5;
@@ -439,6 +603,7 @@ export default function App() {
     } else if (distance > 100) {
       // Clear/Throw card out of screen
       setIsThrownAnimating(true);
+      triggerShower();
       const angle = Math.atan2(dy, dx);
       const throwX = Math.cos(angle) * 600;
       const throwY = Math.sin(angle) * 600;
@@ -567,6 +732,7 @@ export default function App() {
 
   return (
     <div className="app-root-container">
+      <ViewportShowerStones stones={showerStones} onRemove={handleRemoveShowerStone} />
 
       {/* Header bar */}
       <header className="main-header">
@@ -579,6 +745,7 @@ export default function App() {
             <a href="#depoimentos" className="nav-link">Depoimentos</a>
             <a href="#beneficios" className="nav-link">Benefícios</a>
             <a href="#kit" className="nav-link">O Kit</a>
+            <a href="#faq" className="nav-link">Perguntas</a>
           </nav>
           <div className="header-actions">
             <button className="cta-button-nav" onClick={scrollToCadastro}>Garantir Baralho</button>
@@ -593,10 +760,10 @@ export default function App() {
           <FloatingStones count={6} />
           <div className="container hero-container-centered">
             <div className="hero-content-centered">
-              <h1 className="hero-title-centered">Aprenda com sua própria <span className="accent-text">autossabotagem.</span></h1>
+              <h1 className="hero-title-centered">Aprenda a rir (e a evoluir) com a sua <span className="accent-text">própria inércia.</span></h1>
               
               <p className="hero-subtitle-centered">
-                Um "tratamento" de 90 dias focado em autoconhecimento e ação. 90 cartas táteis projetadas não apenas para você rir, mas para aprender com cada procrastinação e incentivar a busca por terapia ou acompanhamento profissional.
+                90 cartas físicas com verdades ácidas e hilárias que você vive fingindo não saber. O empurrão diário perfeito para você mapear suas desculpas, melhorar seu autoconhecimento e, quem sabe, finalmente marcar aquela consulta com um psicólogo.
               </p>
               <div className="hero-actions-centered">
                 <button className="cta-button-primary" onClick={scrollToCadastro}>Garantir Meu Baralho 🪨</button>
@@ -886,6 +1053,84 @@ export default function App() {
                 <li><strong>Coleção de Adesivos:</strong> Selos irônicos para colar no notebook e rir com os colegas de escritório.</li>
               </ul>
               <button className="cta-button-primary" onClick={scrollToCadastro}>Garantir Lote de Lançamento</button>
+            </div>
+          </div>
+
+          {/* ACCUMULATED STONES FLOOR */}
+          <div className="accumulated-stones-floor">
+            {Array.from({ length: Math.min(accumulatedStones, 150) }).map((_, i) => {
+              const left = `${(i * 4.7) % 94}%`;
+              const bottom = `${Math.floor(i / 18) * 10}px`;
+              const size = 32 + (i % 4) * 8; // 32px to 56px
+              const rotation = `${((i * 47) % 70) - 35}deg`;
+              const type = i % 3;
+              return (
+                <div
+                  key={i}
+                  className="accumulated-stone"
+                  style={{
+                    left,
+                    bottom,
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    '--rot': rotation,
+                  }}
+                >
+                  {type === 0 && (
+                    <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M 15,10 L 45,8 L 55,25 L 42,42 L 18,40 L 8,25 Z" fill="#938C80" stroke="#3A342B" strokeWidth="2.5" strokeLinejoin="round" />
+                      <path d="M 15,10 L 25,25 L 18,40" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 45,8 L 35,22 L 42,42" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 25,25 L 35,22" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                    </svg>
+                  )}
+                  {type === 1 && (
+                    <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M 20,6 L 40,6 L 54,20 L 48,44 L 12,44 L 6,20 Z" fill="#8A8378" stroke="#3A342B" strokeWidth="2.5" strokeLinejoin="round" />
+                      <path d="M 20,6 L 22,25 L 12,44" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 40,6 L 38,25 L 48,44" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 22,25 L 38,25" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                    </svg>
+                  )}
+                  {type === 2 && (
+                    <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M 30,5 L 52,22 L 42,45 L 18,45 L 8,22 Z" fill="#9C9589" stroke="#3A342B" strokeWidth="2.5" strokeLinejoin="round" />
+                      <path d="M 30,5 L 30,25 L 18,45" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 30,25 L 42,45" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                      <path d="M 8,22 L 30,25 L 52,22" stroke="#3A342B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                    </svg>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Section 5b: FAQ Accordion */}
+        <section className="faq-section reveal-on-scroll" id="faq">
+          <div className="container faq-container">
+            <h2 className="section-title">Perguntas Frequentes (Sem Autoajuda)</h2>
+            <p className="section-subtitle">Dúvidas reais com respostas dolorosamente sinceras.</p>
+            
+            <div className="faq-accordion">
+              {faqData.map((item, idx) => {
+                const isOpen = expandedFaq === idx;
+                return (
+                  <div key={idx} className={`faq-item ${isOpen ? 'faq-item-open' : ''}`}>
+                    <button 
+                      className="faq-question-btn" 
+                      onClick={() => toggleFaq(idx)}
+                      aria-expanded={isOpen}
+                    >
+                      <span>{item.q}</span>
+                      <span className="faq-icon">{isOpen ? '−' : '+'}</span>
+                    </button>
+                    <div className="faq-answer-wrapper" style={{ maxHeight: isOpen ? '250px' : '0' }}>
+                      <div className="faq-answer-content" dangerouslySetInnerHTML={{ __html: item.a }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
