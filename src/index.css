@@ -428,10 +428,14 @@ p {
 }
 
 .hero-title-centered {
-  font-size: 3.8rem;
+  font-size: 3.4rem;
   line-height: 1.05;
   letter-spacing: -0.035em;
   font-weight: 900;
+}
+
+.hero-br {
+  display: block;
 }
 
 .hero-subtitle-centered {
@@ -2195,7 +2199,7 @@ p {
     text-align: center;
   }
 
-  .hero-title-centered { font-size: 3rem; }
+  .hero-title-centered { font-size: 2.8rem; }
 
   .hero-product-fan-container {
     height: 290px;
@@ -2246,7 +2250,7 @@ p {
 }
 
 @media (max-width: 768px) {
-  .hero-title-centered { font-size: 2.5rem; }
+  .hero-title-centered { font-size: 2.2rem; }
   .section-title { font-size: 2rem; }
 
   /* Navbar responsive adjustments */
