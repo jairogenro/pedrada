@@ -96,24 +96,39 @@ export default function App() {
   const [tremorActive, setTremorActive] = useState(false);
   const [cardsDrawnCount, setCardsDrawnCount] = useState(0);
 
-  // Testimonials carousel state
+  // Growing waitlist counter (absurdamente alto e crescendo)
+  const [waitlistCount, setWaitlistCount] = useState(47382);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWaitlistCount(prev => prev + Math.floor(Math.random() * 4) + 1);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Testimonials carousel state + auto-advance
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [testimonialDir, setTestimonialDir] = useState('next');
 
   const goTestimonial = (index) => {
-    setTestimonialDir(index > activeTestimonial ? 'next' : 'prev');
     setActiveTestimonial(index);
   };
 
   const prevTestimonial = () => {
-    const idx = activeTestimonial === 0 ? testimonials.length - 1 : activeTestimonial - 1;
-    goTestimonial(idx);
+    setActiveTestimonial(i => i === 0 ? testimonials.length - 1 : i - 1);
   };
 
   const nextTestimonial = () => {
-    const idx = (activeTestimonial + 1) % testimonials.length;
-    goTestimonial(idx);
+    setActiveTestimonial(i => (i + 1) % testimonials.length);
   };
+
+  // Auto-advance carousel a cada 4.5s, com pausa maior no rage card (7s)
+  useEffect(() => {
+    const t = testimonials[activeTestimonial];
+    const delay = t?.isRage ? 7000 : 4500;
+    const timer = setTimeout(() => {
+      setActiveTestimonial(i => (i + 1) % testimonials.length);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [activeTestimonial]);
 
   // Scroll Phase States for Peeking Mascot: 'hero' | 'drawer' | 'proof' | 'features' | 'kit' | 'waitlist'
   const [scrollPhase, setScrollPhase] = useState('hero');
@@ -182,7 +197,7 @@ export default function App() {
     });
 
     ScrollTrigger.create({
-      trigger: ".proof-section",
+      trigger: ".testimonials-section",
       start: "top center",
       end: "bottom center",
       onEnter: () => setScrollPhase('proof'),
@@ -291,10 +306,17 @@ export default function App() {
     if (isThrownAnimating) return;
     setIsThrownAnimating(true);
 
+    // Randomize throw target coordinates & rotation to make it feel organic and chaotic
+    const isLeft = Math.random() > 0.5;
+    const isTop = Math.random() > 0.5;
+    const throwX = (isLeft ? -1 : 1) * (400 + Math.random() * 200);
+    const throwY = (isTop ? -1 : 1) * (200 + Math.random() * 200);
+    const throwRot = (isLeft ? -1 : 1) * (30 + Math.random() * 40);
+
     gsap.to(cardRef.current, {
-      x: 400,
-      y: -200,
-      rotation: 45,
+      x: throwX,
+      y: throwY,
+      rotation: throwRot,
       opacity: 0,
       duration: 0.35,
       ease: "power2.in",
@@ -545,7 +567,6 @@ export default function App() {
         <section className="hero-section">
           <div className="container hero-container-centered">
             <div className="hero-content-centered">
-              <span className="badge">⚠️ RITUAL DE REALIDADE</span>
               <h1 className="hero-title-centered">Ria da sua própria <span className="accent-text">autossabotagem.</span></h1>
               
               <p className="hero-subtitle-centered">
@@ -557,13 +578,7 @@ export default function App() {
                 <a href="#gerador-card" className="cta-button-secondary">Tirar uma Carta ↓</a>
               </div>
               <div className="hero-trust">
-                <div className="hero-trust-avatars">
-                  <div className="avatar-dot">LM</div>
-                  <div className="avatar-dot">AP</div>
-                  <div className="avatar-dot">RB</div>
-                  <div className="avatar-dot">+</div>
-                </div>
-                <p><strong>1.200+</strong> pessoas já na lista de espera</p>
+                <p className="hero-counter">🪨 <strong>{waitlistCount.toLocaleString('pt-BR')}</strong> pessoas destruídas*</p>
               </div>
             </div>
             
@@ -642,7 +657,7 @@ export default function App() {
                   src="/img/cards_mockup_real.png" 
                   alt="Cartas do baralho PEDRADA sobre mesa de madeira, mostrando frente e verso com a Pedrinha 2D." 
                   className="hero-box-image" 
-                  fetchpriority="high"
+                  fetchPriority="high"
                   decoding="sync"
                   width="250"
                   height="344"
@@ -734,34 +749,6 @@ export default function App() {
                 >
                   {isThrownAnimating ? "Arremessando..." : "Levar Pedrada! 🪨"}
                 </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 3: Prova Social & Validação */}
-        <section className="proof-section reveal-on-scroll" id="prova-social">
-          <div className="container">
-            <h2 className="section-title">Quem já tomou a pedrada avisa</h2>
-            <p className="section-subtitle">
-              <span className="accent-text" style={{ fontSize: '1.3rem' }}>1.200+ mentes em processo de cura</span>
-            </p>
-
-            <div className="proof-grid">
-              <div className="proof-card">
-                <span className="quote-icon" aria-hidden="true">“</span>
-                <p className="proof-text">
-                  "Finalmente um produto que não tenta me convencer de que sou incrível. Ele só me mostra o quanto sou burro e me faz rir de mim mesmo antes de agir."
-                </p>
-                <span className="proof-author">— Lucas M., Designer Procrastinador</span>
-              </div>
-
-              <div className="proof-card specialist">
-                <span className="badge">✓ Validação Científica</span>
-                <p className="proof-text">
-                  "A psicologia comportamental nos ensina que a fricção tátil (tocar em um lembrete físico longe de telas) quebra o padrão de autossabotagem muito mais rápido do que um app no celular."
-                </p>
-                <span className="proof-author">— Dra. Ana Paula, Especialista em Hábitos</span>
               </div>
             </div>
           </div>
@@ -964,24 +951,29 @@ export default function App() {
             <a href="#" onClick={(e) => { e.preventDefault(); }}>Privacidade</a>
           </div>
         </div>
+        <div className="container">
+          <p className="footer-disclaimer">* Os depoimentos acima são obviamente fictícios e absurdos por design. Se você ficou ofendido, é sinal claro que precisa urgentemente de uma pedrada. Os números de pessoas na fila também são completamente inventados. A vergonha que você sentiu ao se reconhecer nas cartas, essa sim, é muito real.</p>
+        </div>
       </footer>
 
       {/* SCROLL-REACTIVE PEEKING MASCOT (FIXED SIDE WIDGET) */}
-      <div className="peeking-mascot-container">
+      <div className="peeking-mascot-container" onClick={openModal}>
         <div className="peeking-bubble">
+          <div className="peeking-bubble-label">Pedrinha diz:</div>
           <p>{peekingData.bubble}</p>
+          <div className="peeking-bubble-cta">Garantir baralho →</div>
         </div>
-        <img 
-          src={peekingData.pose} 
-          alt="" 
-          aria-hidden="true"
-          className="peeking-mascot-img"
-          width="90"
-          height="90"
-          onClick={() => {
-            alert("A Pedrinha está vigiando seu progresso! Faça acontecer!");
-          }}
-        />
+        <div className="peeking-mascot-wrap">
+          <img 
+            src={peekingData.pose} 
+            alt="" 
+            aria-hidden="true"
+            className="peeking-mascot-img"
+            width="90"
+            height="90"
+          />
+          <div className="peeking-ping"></div>
+        </div>
       </div>
 
       {/* Modal Dialog waitlist */}
