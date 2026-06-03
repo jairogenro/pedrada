@@ -1268,16 +1268,20 @@ export default function App() {
               </p>
               
               <div className="app-store-buttons">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/2/26/Baixar_na_App_Store.svg" 
-                  alt="Baixar na App Store" 
-                  className="store-badge-img store-badge-apple"
-                />
-                <img 
-                  src="https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png" 
-                  alt="Disponível no Google Play" 
-                  className="store-badge-img store-badge-google"
-                />
+                <a href="#" className="store-badge-link" onClick={e => e.preventDefault()}>
+                  <img 
+                    src="https://upload.wikimedia.org/wikipedia/commons/2/26/Baixar_na_App_Store.svg" 
+                    alt="Baixar na App Store" 
+                    className="store-badge-img store-badge-apple"
+                  />
+                </a>
+                <a href="#" className="store-badge-link" onClick={e => e.preventDefault()}>
+                  <img 
+                    src="https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png" 
+                    alt="Disponível no Google Play" 
+                    className="store-badge-img store-badge-google"
+                  />
+                </a>
               </div>
 
               {/* Comparativo de Acesso */}

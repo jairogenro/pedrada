@@ -2663,13 +2663,17 @@ p {
 
 .app-store-buttons {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-top: 8px;
   flex-wrap: wrap;
 }
 
 .store-badge-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.1s var(--ease-elastic);
   border-radius: 8px;
   overflow: hidden;
@@ -2684,9 +2688,16 @@ p {
 }
 
 .store-badge-img {
-  height: 48px;
   width: auto;
   display: block;
+}
+
+.store-badge-apple {
+  height: 42px;
+}
+
+.store-badge-google {
+  height: 61px;
 }
 
 /* PHONE MOCKUP */
