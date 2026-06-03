@@ -85,6 +85,54 @@ const testimonials = [
   }
 ];
 
+// --- DECORATIVE FLOATING STONES BACKGROUND COMPONENT ---
+function FloatingStones({ count = 6 }) {
+  const stones = [
+    { left: '8%', size: 32, delay: '-2s', duration: '26s', type: 0 },
+    { left: '26%', size: 22, delay: '-7s', duration: '31s', type: 1 },
+    { left: '43%', size: 40, delay: '-14s', duration: '23s', type: 2 },
+    { left: '60%', size: 28, delay: '-10s', duration: '29s', type: 0 },
+    { left: '76%', size: 20, delay: '-4s', duration: '33s', type: 1 },
+    { left: '90%', size: 36, delay: '-18s', duration: '25s', type: 2 }
+  ].slice(0, count);
+
+  return (
+    <div className="bg-floating-stones" aria-hidden="true">
+      {stones.map((stone, idx) => (
+        <div
+          key={idx}
+          className="floating-stone"
+          style={{
+            left: stone.left,
+            width: `${stone.size}px`,
+            height: `${stone.size}px`,
+            animationDelay: stone.delay,
+            animationDuration: stone.duration,
+          }}
+        >
+          {stone.type === 0 && (
+            <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 15,35 C 10,25 25,10 40,15 C 50,20 48,35 40,40 C 30,45 20,45 15,35 Z" fill="rgba(141, 134, 117, 0.06)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M 22,20 Q 30,17 38,22" stroke="rgba(74, 69, 58, 0.06)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+            </svg>
+          )}
+          {stone.type === 1 && (
+            <svg viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 10,25 C 8,15 22,8 35,12 C 42,15 42,28 35,32 C 28,35 12,32 10,25 Z" fill="rgba(165, 158, 144, 0.05)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
+            </svg>
+          )}
+          {stone.type === 2 && (
+            <svg viewBox="0 0 55 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 12,28 C 10,15 28,10 42,18 C 48,22 45,35 38,38 C 28,42 15,38 12,28 Z" fill="rgba(157, 150, 136, 0.06)" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M 22,22 L 28,28 M 28,22 L 22,28" stroke="rgba(74, 69, 58, 0.08)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // --- MAIN APPLICATION ---
 export default function App() {
 
@@ -96,12 +144,12 @@ export default function App() {
   const [tremorActive, setTremorActive] = useState(false);
   const [cardsDrawnCount, setCardsDrawnCount] = useState(0);
 
-  // Growing waitlist counter (absurdamente alto e crescendo)
-  const [waitlistCount, setWaitlistCount] = useState(47382);
+  // Growing waitlist counter (muito maior e crescendo mais rápido)
+  const [waitlistCount, setWaitlistCount] = useState(147382);
   useEffect(() => {
     const interval = setInterval(() => {
-      setWaitlistCount(prev => prev + Math.floor(Math.random() * 4) + 1);
-    }, 1800);
+      setWaitlistCount(prev => prev + Math.floor(Math.random() * 9) + 6);
+    }, 600);
     return () => clearInterval(interval);
   }, []);
 
@@ -133,18 +181,15 @@ export default function App() {
   // Scroll Phase States for Peeking Mascot: 'hero' | 'drawer' | 'proof' | 'features' | 'kit' | 'waitlist'
   const [scrollPhase, setScrollPhase] = useState('hero');
 
-  // Modal Dialog waitlist State
-  const [modalOpen, setModalOpen] = useState(false);
+  // Form input states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Separate success states
-  const [modalSuccess, setModalSuccess] = useState(false);
+  // Success state
   const [inlineSuccess, setInlineSuccess] = useState(false);
 
-  // Mascot pose in dialog/inline forms
-  const [dialogMascotPose, setDialogMascotPose] = useState("/img/mascot_pedrinha_2d.png");
+  // Mascot pose in inline form
   const [inlineMascotPose, setInlineMascotPose] = useState("/img/mascot_pedrinha_2d.png");
 
   // Dragging states and refs
@@ -228,7 +273,7 @@ export default function App() {
       onEnterBack: () => setScrollPhase('waitlist')
     });
 
-    // 3. Peeking Mascot Entrance transition
+    // 3. Peeking Mascot Entrance transition (triggers immediately when starting to scroll down)
     gsap.fromTo(".peeking-mascot-container",
       { y: 160, opacity: 0 },
       {
@@ -237,8 +282,8 @@ export default function App() {
         duration: 0.6,
         ease: "back.out(1.3)",
         scrollTrigger: {
-          trigger: ".hero-section",
-          start: "bottom 80%",
+          trigger: "body",
+          start: "top -50px",
           toggleActions: "play none none reverse"
         }
       }
@@ -270,14 +315,7 @@ export default function App() {
     }
   }, [inlineMascotPose]);
 
-  useEffect(() => {
-    if (dialogMascotPose && modalOpen) {
-      gsap.fromTo(".mascot-img-dialog", 
-        { scale: 0.75, y: 15 },
-        { scale: 1, y: 0, duration: 0.5, ease: "back.out(1.8)" }
-      );
-    }
-  }, [dialogMascotPose, modalOpen]);
+
 
   useEffect(() => {
     if (scrollPhase) {
@@ -467,27 +505,14 @@ export default function App() {
     }
   };
 
-  const openModal = () => {
-    setModalSuccess(false);
-    setName('');
-    setEmail('');
-    setDialogMascotPose("/img/mascot_pedrinha_2d.png");
-    setModalOpen(true);
-  };
-
-  const closeWaitlistModal = () => {
-    setModalOpen(false);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-
-    setTimeout(() => {
-      setSubmitting(false);
-      setModalSuccess(true);
-      setDialogMascotPose("/img/mascot_pedrinha_victory.png");
-    }, 1000);
+  const scrollToCadastro = (e) => {
+    if (e) e.preventDefault();
+    const el = document.getElementById("cadastro-secao");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      const nameInput = document.getElementById("inline-name");
+      if (nameInput) nameInput.focus();
+    }
   };
 
   const handleInlineSubmit = (e) => {
@@ -507,33 +532,33 @@ export default function App() {
       case 'hero':
         return {
           pose: '/img/mascot_pedrinha_2d.png',
-          bubble: 'Oi! Sou a Pedrinha. Vai ficar me olhando aí no topo ou vai descer?'
+          bubble: 'Oi! Este é o seu "tratamento" de 90 dias de autoconhecimento. Preparado?'
         };
       case 'drawer':
         return {
           pose: '/img/mascot_pedrinha_scrolling.png',
-          bubble: 'Clique no baralho de cartas abaixo para levar a sua primeira pedrada realista.'
+          bubble: 'Cada uma das 90 cartas virtuais é um espelho para seu autoconhecimento. Arraste uma!'
         };
       case 'proof':
         return {
           pose: '/img/mascot_pedrinha_victory.png',
-          bubble: 'Viu? Até psicólogo concorda que você precisa de mim na sua mesa.'
+          bubble: 'Rir e aprender com as próprias falhas é o melhor gatilho para incentivar a terapia.'
         };
       case 'features':
         return {
           pose: '/img/mascot_pedrinha_judging.png',
-          bubble: 'Lendo benefícios? Querendo desculpa lógica para procrastinar amanhã?'
+          bubble: 'Estes 90 dias servem para você se conhecer melhor e despertar o interesse por ajuda profissional.'
         };
       case 'kit':
         return {
           pose: '/img/mascot_pedrinha_victory.png',
-          bubble: 'Esse kit físico é perfeito. O Display montável da minha carinha vai na sua mesa.'
+          bubble: 'O kit físico é perfeito para presentear quem precisa de um empurrãozinho sincero.'
         };
       case 'waitlist':
       default:
         return {
           pose: '/img/mascot_pedrinha_scrolling.png',
-          bubble: 'Coloque seu nome e e-mail ao lado. Eu prometo cobrar você do lançamento!'
+          bubble: 'Garanta sua vaga para iniciar sua jornada de 90 dias de autoconhecimento.'
         };
     }
   };
@@ -546,9 +571,9 @@ export default function App() {
       {/* Header bar */}
       <header className="main-header">
         <div className="container header-container">
-          <div className="logo-text">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="logo-text" style={{ textDecoration: 'none' }}>
             <span>PEDRADA 🪨</span>
-          </div>
+          </a>
           <nav className="nav-links-center">
             <a href="#gerador-card" className="nav-link">Tirar Carta</a>
             <a href="#depoimentos" className="nav-link">Depoimentos</a>
@@ -556,7 +581,7 @@ export default function App() {
             <a href="#kit" className="nav-link">O Kit</a>
           </nav>
           <div className="header-actions">
-            <button className="cta-button-nav" onClick={openModal}>Garantir Baralho</button>
+            <button className="cta-button-nav" onClick={scrollToCadastro}>Garantir Baralho</button>
           </div>
         </div>
       </header>
@@ -565,20 +590,20 @@ export default function App() {
       <main>
         {/* Section 1: Hero Section */}
         <section className="hero-section">
+          <FloatingStones count={6} />
           <div className="container hero-container-centered">
             <div className="hero-content-centered">
-              <h1 className="hero-title-centered">Ria da sua própria <span className="accent-text">autossabotagem.</span></h1>
+              <h1 className="hero-title-centered">Aprenda com sua própria <span className="accent-text">autossabotagem.</span></h1>
               
               <p className="hero-subtitle-centered">
-                O primeiro baralho físico que dá um choque de realidade na sua inércia. 
-                90 cartas táteis com verdades ácidas e hilárias para você finalmente levantar e agir.
+                Um "tratamento" de 90 dias focado em autoconhecimento e ação. 90 cartas táteis projetadas não apenas para você rir, mas para aprender com cada procrastinação e incentivar a busca por terapia ou acompanhamento profissional.
               </p>
               <div className="hero-actions-centered">
-                <button className="cta-button-primary" onClick={openModal}>Garantir Meu Baralho 🪨</button>
+                <button className="cta-button-primary" onClick={scrollToCadastro}>Garantir Meu Baralho 🪨</button>
                 <a href="#gerador-card" className="cta-button-secondary">Tirar uma Carta ↓</a>
               </div>
               <div className="hero-trust">
-                <p className="hero-counter">🪨 <strong>{waitlistCount.toLocaleString('pt-BR')}</strong> pessoas destruídas*</p>
+                <p className="hero-counter">🪨 <strong>{waitlistCount.toLocaleString('pt-BR')}</strong> pessoas apedrejadas*</p>
               </div>
             </div>
             
@@ -676,27 +701,7 @@ export default function App() {
             </p>
 
             <div className="drawer-interface-grid">
-              {/* Mascot reaction bubble */}
-              <div className="drawer-mascot-col">
-                <div className="drawer-speech-bubble">
-                  <p>"{reaction}"</p>
-                  {cardsDrawnCount >= 3 && (
-                    <button className="bubble-cta-btn" onClick={openModal}>
-                      Garantir Vaga com 20% OFF 🪨
-                    </button>
-                  )}
-                </div>
-                <img 
-                  src={mascotPose} 
-                  alt="" 
-                  aria-hidden="true"
-                  className="drawer-mascot-img"
-                  width="160"
-                  height="160"
-                />
-              </div>
-
-              {/* Thrown card simulation */}
+              {/* Thrown card simulation (now on the left) */}
               <div className="drawer-interactive-col">
                 <div className="thrown-card-wrapper">
                   <div 
@@ -747,8 +752,28 @@ export default function App() {
                   onClick={triggerThrowAndDraw}
                   disabled={isThrownAnimating}
                 >
-                  {isThrownAnimating ? "Arremessando..." : "Levar Pedrada! 🪨"}
+                  {isThrownAnimating ? "Toma! 🪨" : "Levar Pedrada! 🪨"}
                 </button>
+              </div>
+
+              {/* Mascot reaction bubble (now on the right) */}
+              <div className="drawer-mascot-col">
+                <div className="drawer-speech-bubble">
+                  <p>"{reaction}"</p>
+                  {cardsDrawnCount >= 3 && (
+                    <button className="bubble-cta-btn" onClick={scrollToCadastro}>
+                      Garantir Vaga com 20% OFF 🪨
+                    </button>
+                  )}
+                </div>
+                <img 
+                  src={mascotPose} 
+                  alt="" 
+                  aria-hidden="true"
+                  className="drawer-mascot-img"
+                  width="160"
+                  height="160"
+                />
               </div>
             </div>
           </div>
@@ -756,6 +781,7 @@ export default function App() {
 
         {/* Section 3b: Testimonials Carousel */}
         <section className="testimonials-section reveal-on-scroll" id="depoimentos">
+          <FloatingStones count={5} />
           <div className="container">
             <h2 className="section-title">Quem já tomou a pedrada avisa</h2>
             <p className="section-subtitle">Não é autoajuda. É um espelho com senso de humor.</p>
@@ -811,25 +837,26 @@ export default function App() {
 
         {/* Section 4: Benefits Grid */}
         <section className="features-section reveal-on-scroll" id="beneficios">
+          <FloatingStones count={4} />
           <div className="container">
-            <h2 className="section-title">Por que você precisa de uma dose de realidade?</h2>
-            <p className="section-subtitle">O baralho PEDRADA não passa a mão na sua cabeça. Ele te empurra para frente com diversão.</p>
+            <h2 className="section-title">Como funcionam as suas 90 pedradas diárias?</h2>
+            <p className="section-subtitle">Um "tratamento" de 90 dias focado em autoconhecimento. O objetivo não é apenas rir, mas aprender com as falhas e buscar ajuda profissional.</p>
             
             <div className="features-grid">
               <div className="feature-card">
                 <div className="feature-icon" aria-hidden="true">🎯</div>
-                <h3>Pedrada na Autossabotagem</h3>
-                <p>Rir de si mesma é o melhor remédio. O baralho vira o espelho para você encarar os seus atrasos sem desculpas.</p>
+                <h3>90 Dias de Autoconhecimento</h3>
+                <p>Cada uma das 90 cartas é um espelho. Este "tratamento" contínuo foi desenhado para mapear sua procrastinação e despertar o interesse em acompanhamento psicológico ou terapia profissional.</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon" aria-hidden="true">📆</div>
-                <h3>90 Verdades Ácidas</h3>
-                <p>Um ritual matinal simples: tire uma carta, engula a verdade limpa, coloque a carapuça e comece o seu dia.</p>
+                <h3>Foco no Aprendizado Sincero</h3>
+                <p>Você vai rir das suas desculpas, mas o foco é aprender com elas. E se ao fim de 90 dias você continuar se autossabotando, pelo menos deu boas risadas com as cartas.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon" aria-hidden="true">💎</div>
-                <h3>Visual Cartoon Premium</h3>
-                <p>Papel premium texturizado com laminação fosca de alta qualidade, cantos arredondados e acabamento perfeito de colecionador.</p>
+                <div className="feature-icon" aria-hidden="true">🎁</div>
+                <h3>O Presente Perfeito</h3>
+                <p>Sabe aquele amigo procrastinador de estimação ou familiar que vive reclamando da inércia, mas não age? O baralho PEDRADA é o empurrãozinho perfeito para incentivá-lo a amadurecer.</p>
               </div>
             </div>
           </div>
@@ -837,6 +864,7 @@ export default function App() {
 
         {/* Section 5: Product Specifications */}
         <section className="details-section reveal-on-scroll" id="kit">
+          <FloatingStones count={4} />
           <div className="container details-container">
             <div className="details-media">
               <img 
@@ -850,20 +878,20 @@ export default function App() {
             </div>
             <div className="details-content">
               <h2 className="section-title">O que vem no seu kit?</h2>
-              <p>O primeiro jogo físico projetado para quebrar a sua inércia de forma leve.</p>
+              <p>Uma ferramenta prática de autoconhecimento disfarçada de baralho.</p>
               <ul className="details-list">
                 <li><strong>90 Cartas de Impacto:</strong> Frases cruas e ácidas com destaque em coral no fundo creme.</li>
                 <li><strong>Display da Pedrinha:</strong> Um totem montável da mascote para decorar a sua mesa de trabalho.</li>
                 <li><strong>Estojo Rígido de Pedra:</strong> Embalagem premium com encaixe magnético imitando textura rochosa.</li>
                 <li><strong>Coleção de Adesivos:</strong> Selos irônicos para colar no notebook e rir com os colegas de escritório.</li>
               </ul>
-              <button className="cta-button-primary" onClick={openModal}>Garantir Lote de Lançamento</button>
+              <button className="cta-button-primary" onClick={scrollToCadastro}>Garantir Lote de Lançamento</button>
             </div>
           </div>
         </section>
 
         {/* Section 6: Inline Waitlist Form (with mascot reactions) */}
-        <section className="waitlist-inline-section reveal-on-scroll">
+        <section className="waitlist-inline-section reveal-on-scroll" id="cadastro-secao">
           <div className="container waitlist-inline-container">
             <div className="waitlist-card-wrapper">
               <div className="waitlist-mascot-container">
@@ -889,7 +917,7 @@ export default function App() {
                 <h2 className="waitlist-title">Entre na Lista de Lançamento</h2>
                 <p className="waitlist-desc">
                   O primeiro lote físico de <strong>PEDRADA</strong> está em produção. 
-                  Deixe seus contatos abaixo para garantir seu baralho com 20% de desconto na pré-venda.
+                  Deixe seus contatos abaixo para garantir o seu baralho com 20% de desconto e dar início ao seu "tratamento" de 90 dias de autoconhecimento.
                 </p>
 
                 {!inlineSuccess ? (
@@ -957,8 +985,8 @@ export default function App() {
       </footer>
 
       {/* SCROLL-REACTIVE PEEKING MASCOT (FIXED SIDE WIDGET) */}
-      <div className="peeking-mascot-container" onClick={openModal}>
-        <div className="peeking-bubble">
+      <div className="peeking-mascot-container" onClick={scrollToCadastro}>
+        <div className="peeking-bubble" key={scrollPhase}>
           <div className="peeking-bubble-label">Pedrinha diz:</div>
           <p>{peekingData.bubble}</p>
           <div className="peeking-bubble-cta">Garantir baralho →</div>
@@ -975,83 +1003,6 @@ export default function App() {
           <div className="peeking-ping"></div>
         </div>
       </div>
-
-      {/* Modal Dialog waitlist */}
-      {modalOpen && (
-        <div className="dialog-backdrop" onClick={closeWaitlistModal}>
-          <div className="dialog-modal-card" onClick={e => e.stopPropagation()}>
-            <button className="close-dialog" onClick={closeWaitlistModal} aria-label="Fechar modal">&times;</button>
-            
-            <div className="dialog-header-mascot">
-              <img 
-                src={dialogMascotPose} 
-                alt="" 
-                aria-hidden="true"
-                className="mascot-img-dialog" 
-                width="68"
-                height="68"
-              />
-              <h2>Não seja procrastinadora!</h2>
-            </div>
-
-            {!modalSuccess ? (
-              <>
-                <p className="dialog-desc">
-                  O primeiro lote físico de <strong>PEDRADA</strong> está em produção. 
-                  Entre na lista de prioridade para ser notificada do lançamento e garantir seus 20% de desconto.
-                </p>
-                <form 
-                  id="waitlist-form" 
-                  onSubmit={handleSubmit}
-                  onMouseEnter={() => setDialogMascotPose("/img/mascot_pedrinha_scrolling.png")}
-                  onMouseLeave={() => setDialogMascotPose("/img/mascot_pedrinha_2d.png")}
-                >
-                  <div className="form-group">
-                    <label htmlFor="modal-name">Qual o nome da vítima?</label>
-                    <input 
-                      id="modal-name"
-                      type="text" 
-                      required 
-                      value={name} 
-                      onChange={e => setName(e.target.value)} 
-                      placeholder="Seu nome"
-                      onFocus={() => setDialogMascotPose("/img/mascot_pedrinha_scrolling.png")}
-                      onBlur={() => setDialogMascotPose("/img/mascot_pedrinha_2d.png")}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="modal-email">E-mail (sem spam de autoajuda)</label>
-                    <input 
-                      id="modal-email"
-                      type="email" 
-                      required 
-                      value={email} 
-                      onChange={e => setEmail(e.target.value)} 
-                      placeholder="seu@email.com"
-                      onFocus={() => setDialogMascotPose("/img/mascot_pedrinha_judging.png")}
-                      onBlur={() => setDialogMascotPose("/img/mascot_pedrinha_2d.png")}
-                    />
-                  </div>
-                  <button type="submit" className="submit-button" disabled={submitting}>
-                    {submitting ? 'Registrando...' : 'Garantir Lote Com Desconto'}
-                  </button>
-                </form>
-              </>
-            ) : (
-              <div className="success-message">
-                <div className="success-icon">✓</div>
-                <h3>Seu cadastro foi realizado!</h3>
-                <p>
-                  Salvamos seus dados, {name}! Enviaremos o cupom de 20% assim que o lote for liberado. Tente não esquecer!
-                </p>
-                <button className="cta-button-primary" style={{ marginTop: '20px', width: '100%' }} onClick={closeWaitlistModal}>
-                  Entendido
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
