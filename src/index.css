@@ -2661,12 +2661,30 @@ p {
   gap: 20px;
 }
 
+.app-content .section-title {
+  margin-bottom: 0;
+}
+
+.app-content .section-subtitle {
+  margin: 0;
+  max-width: none;
+}
+
+@media (min-width: 993px) {
+  .app-content .section-title {
+    text-align: left;
+  }
+  .app-content .section-subtitle {
+    text-align: left;
+  }
+}
+
 .app-store-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 16px;
-  margin-top: 8px;
+  margin: 0;
   flex-wrap: wrap;
 }
 
@@ -2697,7 +2715,7 @@ p {
 }
 
 .store-badge-google {
-  height: 61px;
+  height: 55px;
 }
 
 /* PHONE MOCKUP */
@@ -2859,7 +2877,7 @@ p {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: 24px;
-  margin-top: 32px;
+  margin-top: 0;
   width: 100%;
 }
 
