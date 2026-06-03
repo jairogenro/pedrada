@@ -40,16 +40,80 @@ const pedrinhaReactions = [
   "A carapuça serviu tão bem que parece sob medida. Quer que eu costure?"
 ];
 
+// --- TESTIMONIALS DATA ---
+const testimonials = [
+  {
+    name: "Lucas M.",
+    role: "Designer Sênior · São Paulo",
+    stars: 5,
+    quote: "Tirei a carta 'Você não está confuso. Está apenas evitando a clareza.' na segunda-feira de manhã. Chorei. Mandei o projeto que estava 'quase pronto' faz 7 meses. Nota 10.",
+    initials: "LM",
+    color: "#D4522A"
+  },
+  {
+    name: "Rafaela B.",
+    role: "Coach de Vida · Certificada pelo YouTube",
+    stars: 5,
+    quote: "Recomendo para todos os meus clientes antes de recomendarem os meus serviços. O baralho resolve em 5 minutos o que eu levo 6 sessões pra fingir que resolvo.",
+    initials: "RB",
+    color: "#8D6E3A"
+  },
+  {
+    name: "Dra. Ana Paula",
+    role: "Psicóloga Comportamental",
+    stars: 5,
+    quote: "Clinicamente, a metodologia apresentada é... tá, é só palavrão e humor. Mas funciona. Meus pacientes largaram o celular. Eu quase larguei minha carreira. 5 estrelas.",
+    initials: "AP",
+    color: "#5A7A5A"
+  },
+  {
+    name: "Thiago V.",
+    role: "Empreendedor em Série · 4 Startups, 4 Pivots",
+    stars: 5,
+    quote: "Dei de presente pra toda a minha equipe. Na semana seguinte dois pediram demissão e um foi morar no sítio. Nunca tomaram uma decisão tão rápida. Obrigado, PEDRADA.",
+    initials: "TV",
+    color: "#4A6A8A"
+  },
+  {
+    name: "MARCELO F.",
+    role: "Ex-Fã · Muito Arrependido",
+    stars: 0,
+    quote: "COMPREI ACHANDO QUE ERA UM JOGO DIVERTIDO. A PRIMEIRA CARTA QUE TIREI FOI 'VOCÊ NÃO ESTÁ SEM TEMPO, SÓ GASTA 2H POR DIA VENDO A VIDA DOS OUTROS'. EU DELETEI O INSTAGRAM. CANCELEI A NETFLIX. AGORA SÓ TRABALHO E LEIO. ESTOU DESTRUÍDO. NOTA ZERO. PRODUTO HORRÍVEL. COMPREM.",
+    initials: "!!",
+    color: "#C0392B",
+    isRage: true
+  }
+];
+
 // --- MAIN APPLICATION ---
 export default function App() {
 
   // Thrown Card States
   const [phrase, setPhrase] = useState("Gastou R$ 200 em vela aromática para relaxar. A fonte do seu estresse <span class='accent-text'>TEM CPF</span>.");
   const [reaction, setReaction] = useState("Clique no baralho de cartas abaixo para levar a sua primeira pedrada realista.");
-  const [mascotPose, setMascotPose] = useState("/img/mascot_pedrinha_2d.png");
+  const [mascotPose, setMascotPose] = useState("/img/mascot_pedrinha.png");
   const [isThrownAnimating, setIsThrownAnimating] = useState(false);
   const [tremorActive, setTremorActive] = useState(false);
   const [cardsDrawnCount, setCardsDrawnCount] = useState(0);
+
+  // Testimonials carousel state
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [testimonialDir, setTestimonialDir] = useState('next');
+
+  const goTestimonial = (index) => {
+    setTestimonialDir(index > activeTestimonial ? 'next' : 'prev');
+    setActiveTestimonial(index);
+  };
+
+  const prevTestimonial = () => {
+    const idx = activeTestimonial === 0 ? testimonials.length - 1 : activeTestimonial - 1;
+    goTestimonial(idx);
+  };
+
+  const nextTestimonial = () => {
+    const idx = (activeTestimonial + 1) % testimonials.length;
+    goTestimonial(idx);
+  };
 
   // Scroll Phase States for Peeking Mascot: 'hero' | 'drawer' | 'proof' | 'features' | 'kit' | 'waitlist'
   const [scrollPhase, setScrollPhase] = useState('hero');
@@ -463,9 +527,15 @@ export default function App() {
           <div className="logo-text">
             <span>PEDRADA 🪨</span>
           </div>
-          <nav className="header-actions">
-            <button className="cta-button-nav" onClick={openModal}>Garantir Baralho</button>
+          <nav className="nav-links-center">
+            <a href="#gerador-card" className="nav-link">Tirar Carta</a>
+            <a href="#depoimentos" className="nav-link">Depoimentos</a>
+            <a href="#beneficios" className="nav-link">Benefícios</a>
+            <a href="#kit" className="nav-link">O Kit</a>
           </nav>
+          <div className="header-actions">
+            <button className="cta-button-nav" onClick={openModal}>Garantir Baralho</button>
+          </div>
         </div>
       </header>
 
@@ -567,10 +637,10 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                {/* Main physical box packaging (Optimized LCP with fetchpriority and decoding) */}
+                {/* Real product cards photo — replaces dark placeholder box */}
                 <img 
-                  src="/img/box_mockup.png" 
-                  alt="Caixa do baralho PEDRADA na cor marrom com o logo estilizado P." 
+                  src="/img/cards_mockup_real.png" 
+                  alt="Cartas do baralho PEDRADA sobre mesa de madeira, mostrando frente e verso com a Pedrinha 2D." 
                   className="hero-box-image" 
                   fetchpriority="high"
                   decoding="sync"
@@ -697,8 +767,63 @@ export default function App() {
           </div>
         </section>
 
+        {/* Section 3b: Testimonials Carousel */}
+        <section className="testimonials-section reveal-on-scroll" id="depoimentos">
+          <div className="container">
+            <h2 className="section-title">Quem já tomou a pedrada avisa</h2>
+            <p className="section-subtitle">Não é autoajuda. É um espelho com senso de humor.</p>
+
+            <div className="tcarousel-wrap">
+              {/* Prev arrow */}
+              <button className="tarrow tarrow-prev" onClick={prevTestimonial} aria-label="Depoimento anterior">‹</button>
+
+              <div className="tgrid">
+                {testimonials.map((t, i) => (
+                  <div
+                    key={i}
+                    className={`tcard${i === activeTestimonial ? ' tcard-active' : ''}${t.isRage ? ' tcard-rage' : ''}`}
+                    style={{ '--avatar-color': t.color }}
+                  >
+                    <div className="tcard-avatar">
+                      <span>{t.initials}</span>
+                    </div>
+                    <div className="tcard-body">
+                      <div className="tcard-stars">
+                        {t.stars > 0
+                          ? '★'.repeat(t.stars)
+                          : <span className="tcard-stars-zero">☆☆☆☆☆ (0 estrelas)</span>
+                        }
+                      </div>
+                      <p className="tcard-quote">"{t.quote}"</p>
+                      <div className="tcard-author">
+                        <strong>{t.name}</strong>
+                        <span>{t.role}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Next arrow */}
+              <button className="tarrow tarrow-next" onClick={nextTestimonial} aria-label="Próximo depoimento">›</button>
+            </div>
+
+            {/* Dots */}
+            <div className="tcarousel-dots">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  className={`tdot${i === activeTestimonial ? ' tdot-active' : ''}`}
+                  onClick={() => goTestimonial(i)}
+                  aria-label={`Depoimento ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Section 4: Benefits Grid */}
-        <section className="features-section reveal-on-scroll">
+        <section className="features-section reveal-on-scroll" id="beneficios">
           <div className="container">
             <h2 className="section-title">Por que você precisa de uma dose de realidade?</h2>
             <p className="section-subtitle">O baralho PEDRADA não passa a mão na sua cabeça. Ele te empurra para frente com diversão.</p>
@@ -724,7 +849,7 @@ export default function App() {
         </section>
 
         {/* Section 5: Product Specifications */}
-        <section className="details-section reveal-on-scroll">
+        <section className="details-section reveal-on-scroll" id="kit">
           <div className="container details-container">
             <div className="details-media">
               <img 

@@ -1587,6 +1587,300 @@ p {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   NAV LINKS CENTER
+══════════════════════════════════════════════════════════════ */
+.nav-links-center {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 20px; height: 2.5px;
+  background: var(--orange);
+  border-radius: 2px;
+  transition: transform 0.2s var(--ease-elastic);
+}
+
+.nav-link:hover {
+  color: var(--text-main);
+  background-color: var(--bg-secondary);
+}
+
+.nav-link:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TESTIMONIALS CAROUSEL
+══════════════════════════════════════════════════════════════ */
+.testimonials-section {
+  padding: 100px 0;
+  background: var(--bg-app);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.testimonials-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(212,82,42,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.tcarousel-wrap {
+  position: relative;
+  max-width: 820px;
+  margin: 44px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Arrow buttons */
+.tarrow {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--cream-border);
+  border-bottom: 4px solid var(--cream-shadow);
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.15s var(--ease-elastic),
+    border-color 0.15s ease,
+    color 0.15s ease,
+    border-bottom-width 0.1s ease;
+  box-shadow: 0 4px 12px rgba(78,70,62,0.08);
+  font-family: var(--font-display);
+  font-weight: 900;
+}
+
+.tarrow:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  transform: scale(1.08);
+  border-bottom-width: 6px;
+}
+
+.tarrow:active {
+  transform: scale(0.96);
+  border-bottom-width: 2px;
+}
+
+/* Card grid/track */
+.tgrid {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+}
+
+/* Individual testimonial card */
+.tcard {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 28px;
+  background: var(--bg-card);
+  border: 2px solid var(--cream-border);
+  border-bottom: 7px solid var(--cream-shadow);
+  border-radius: var(--radius-card);
+  padding: 32px 36px;
+  box-shadow: 0 8px 32px rgba(78,70,62,0.07);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top accent line */
+.tcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-mid));
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
+.tcard-active {
+  display: flex;
+  animation: tslide 0.3s var(--ease-snappy) both;
+}
+
+/* RAGE CARD — o Marcelo F. está no limite */
+.tcard-rage {
+  border-color: rgba(192, 57, 43, 0.5) !important;
+  background: linear-gradient(160deg, #fff8f7 0%, #fff0ee 100%) !important;
+}
+
+.tcard-rage::before {
+  background: linear-gradient(90deg, #C0392B, #E74C3C) !important;
+}
+
+.tcard-rage .tcard-avatar {
+  animation: rage-pulse 0.9s ease-in-out infinite alternate;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.tcard-rage .tcard-quote {
+  color: #C0392B !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+  font-size: 0.98rem !important;
+  letter-spacing: 0.01em;
+  line-height: 1.55;
+}
+
+.tcard-rage .tcard-author strong {
+  color: #C0392B !important;
+}
+
+.tcard-rage .tcard-author span {
+  color: #E74C3C !important;
+}
+
+.tcard-stars-zero {
+  color: var(--text-light);
+  font-size: 0.85rem !important;
+  letter-spacing: 0 !important;
+  font-weight: 800;
+  font-style: italic;
+}
+
+@keyframes rage-pulse {
+  from { box-shadow: 0 0 0 3px #C0392B, 0 8px 24px rgba(192,57,43,0.2); }
+  to   { box-shadow: 0 0 0 6px rgba(192,57,43,0.6), 0 12px 32px rgba(192,57,43,0.4); }
+}
+
+/* Avatar */
+.tcard-avatar {
+  flex-shrink: 0;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--avatar-color, var(--orange));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(255,255,255,0.8);
+  box-shadow:
+    0 0 0 3px var(--avatar-color, var(--orange)),
+    0 8px 24px rgba(0,0,0,0.12);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+/* Body */
+.tcard-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tcard-stars {
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: #F5A623;
+}
+
+.tcard-quote {
+  font-size: 1.08rem;
+  color: var(--text-main);
+  font-weight: 700;
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+.tcard-author {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tcard-author strong {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--text-main);
+  font-family: var(--font-display);
+}
+
+.tcard-author span {
+  font-size: 0.82rem;
+  color: var(--orange);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Dots */
+.tcarousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.tdot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cream-border);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.2s var(--ease-elastic), width 0.2s ease;
+}
+
+.tdot-active {
+  background: var(--orange);
+  width: 28px;
+  border-radius: 5px;
+  transform: none;
+}
+
+.tdot:hover:not(.tdot-active) {
+  background: var(--cream-shadow);
+  transform: scale(1.2);
+}
+
+@keyframes tslide {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    KEYFRAMES
 ══════════════════════════════════════════════════════════════ */
 @keyframes fadeIn {
