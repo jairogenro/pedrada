@@ -862,7 +862,7 @@ export default function App() {
           <FloatingStones count={6} />
           <div className="container hero-container-centered">
             <div className="hero-content-centered">
-              <h1 className="hero-title-centered">Aprenda a rir (e finalmente agir) da sua própria <span className="accent-text">autossabotagem.</span></h1>
+              <h1 className="hero-title-centered">Aprenda a rir da sua própria <span className="accent-text">autossabotagem</span> — e finalmente sair da inércia.</h1>
               
               <p className="hero-subtitle-centered">
                 O baralho PEDRADA traz 90 cartas físicas com verdades ácidas e hilárias sobre as suas desculpas diárias. O empurrão perfeito para você confrontar a sua autossabotagem, parar de empurrar a vida com a barriga e finalmente sair do modo estátua.
