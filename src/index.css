@@ -2666,7 +2666,7 @@ p {
 }
 
 .app-content .section-subtitle {
-  margin: 0 auto;
+  margin: 0 auto 28px;
 }
 
 .app-store-buttons {
@@ -2867,7 +2867,7 @@ p {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: 24px;
-  margin-top: 0;
+  margin-top: 28px;
   width: 100%;
 }
 
